@@ -90,17 +90,33 @@ public class Main extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
         	
-        //calling classes and methods
-        JsonParser jp = new JsonParser();
         
-        jp.liveURLToJSON(); //Creates a txt file from the live URL
-        	
 	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		   launch(args);
+	public static void main(String[] args) {   
+		
+		//calling classes and methods
+        JsonParser jp = new JsonParser();
+        //Creates a txt file from the live URL and then stores in Patient Object Array
+        jp.liveURLToJSONToPatientObj(); 
+        Patient[] patients = jp.getPatients();
+        
+        //WHITEBOX TESTING
+        //
+        //
+        //patient number - 1 gives array patient index
+        //final int studentFromWuhanCase3 = 3;
+        //System.out.println(patients[studentFromWuhanCase3-1].getPatientNumber()); //should return 3
+        //System.out.println(patients[studentFromWuhanCase3-1].getDetectedDistrict()); //should return Kasaragod
+        //
+        //
+        //WHITEBOX TESTING OVER
+        		
+        //launching the javafx
+		launch(args);
+		   
 	}
 }
