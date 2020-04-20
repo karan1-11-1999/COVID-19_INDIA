@@ -1,6 +1,7 @@
 package application;
 
 import java.util.List;
+import java.util.*;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -135,17 +136,111 @@ public class Main extends Application {
 		// 
 		// PLEASE SOME CREATE AND FILL IN THE ARRAY SO I CAN CREATE A GRAPH
 		
-		/*
-		 * 
-		 * 
-		 * 
-		 * 
-		 * IMPORTANT TODO
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
+		
+		
+		
+		//a 2D array that records how many new cases were reported on specific dates 
+		
+		//1. Define an inner class Date to record info regarding to THAT day
+		class Date implements Comparable<Date>{
+			String date;
+			int Cases;
+			int recovered;
+
+			Date(String date, int newCases, int recorved) {
+				this.date = date;
+				this.Cases = newCases;
+				this.recovered = recorved;
+			}
+			
+			@Override
+			public int compareTo(Date otherDate) {
+			 //get rid of the exceptional case
+				if(otherDate.date.equals("?"))
+					return -1;
+				if(date.equals("?"))
+					return 1;
+			// the non-empty dates would be of the format "Date/Month/Year"
+				String[] ar1 = date.split("/");
+				String[] ar2 = otherDate.date.split("/");
+				
+				int[] arr1 = new int[3];
+				int[] arr2 = new int[3];
+				for(int i = 0; i<3; i++) {
+					arr1[i] = Integer.parseInt(ar1[i]);
+					arr2[i] = Integer.parseInt(ar2[i]);
+				}
+				if(arr1[2] != arr2[2]) 
+					return arr1[2] - arr2[2];
+			    if(arr1[1] != arr2[1]) 
+					return arr1[1] - arr2[1];
+			    else
+			    	return arr1[0] - arr2[0];
+					
+				
+			}
+		}
+
+		//2. create a map to store all the Dates that have occurred and update the map as
+		// vetting through Patients
+		Map<String, Date> record = new HashMap<String, Date>();
+
+		JsonParser jp = new JsonParser();
+		jp.liveURLToJSONToPatientObj();
+		Patient[] patients = jp.getPatients();
+
+		for (int i = 0; i < patients.length; i++) {
+			String dateAnnounced = patients[i].getDateAnnounced();
+			String statusChangeDate = patients[i].getStatusChangeDate();
+
+			if (record.containsKey(dateAnnounced)) {
+				// update info related to this Date
+				Date update = record.get(dateAnnounced);
+				update.Cases++;
+				record.replace(dateAnnounced, update);
+			}
+			// update the recovered data if the patient has recovered
+			if (record.containsKey(statusChangeDate) && patients[i].getCurrentStatus().equals("Recovered")) {
+				Date update = record.get(statusChangeDate);
+				update.recovered++;
+				record.replace(statusChangeDate, update);
+			}
+
+			if (!record.containsKey(dateAnnounced)) {
+				// otherwise it would have been counted in the previous IF
+				if (!record.containsKey(statusChangeDate) && patients[i].getCurrentStatus().equals("Recovered")) {
+					record.put(dateAnnounced, new Date(dateAnnounced, 1, 1)); // first patient on that date and has
+					// recovered
+				} else
+					record.put(dateAnnounced, new Date(dateAnnounced, 1, 0)); // first patient of that date and hasn't
+				// recovered
+			}
+		}
+		
+		//3. create a sorted ArrayList to store all the Dates that have showed up, remove "?"
+		List<Date> dates = new ArrayList<Date>(record.values());
+		for(int i = 0; i< dates.size(); i++) {
+			if(dates.get(i).date.equals("?"))
+				dates.remove(i);
+		}
+		Collections.sort(dates);
+		
+		//build the desired 2D array
+		Object[][] countryGraph = new Object[3][dates.size()];
+		for(int i=0; i<dates.size(); i++) {
+			countryGraph[0][i] = dates.get(i).date;
+			countryGraph[1][i] = dates.get(i).Cases;
+			countryGraph[2][i] = dates.get(i).recovered;
+		}
+		
+		//A test for checking the matrix
+//		for(int i=0; i<dates.size(); i++) {
+//			System.out.println(countryGraph[0][i] );
+//			System.out.println(countryGraph[1][i] );
+//			System.out.println(countryGraph[2][i] );
+//		}
+		
+		
 		
 		
 		ObservableList<String> ob = FXCollections.observableArrayList();
@@ -201,8 +296,6 @@ public class Main extends Application {
         //Creates a txt file from the live URL and then stores in Patient Object Array
         jp.liveURLToJSONToPatientObj(); 
         patients = jp.getPatients();
-        
-        System.out.println(patients[0].getDateAnnounced());
         
         //WHITEBOX TESTING
         //
