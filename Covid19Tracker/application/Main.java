@@ -202,6 +202,8 @@ public class Main extends Application {
         jp.liveURLToJSONToPatientObj(); 
         patients = jp.getPatients();
         
+        System.out.println(patients[0].getDateAnnounced());
+        
         //WHITEBOX TESTING
         //
         //

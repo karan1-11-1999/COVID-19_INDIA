@@ -97,10 +97,10 @@ class JsonParser {
 
 				// nationality
 				if (patientItem.get("nationality").equals("")) {
-					patients[i].setDateAnnounced("?");
+					patients[i].setNationality("?");
 				} else {
 					String nationality = (String) patientItem.get("nationality");
-					patients[i].setDateAnnounced(nationality);
+					patients[i].setNationality(nationality);
 				}
 
 				// patientNumber
