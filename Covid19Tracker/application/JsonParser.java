@@ -128,6 +128,14 @@ class JsonParser {
 					String typeoftransmission = (String) patientItem.get("typeoftransmission");
 					patients[i].setTypeoftransmission(typeoftransmission);
 				}
+				
+				//statuschangedate
+				if (patientItem.get("statuschangedate").equals("")) {
+					patients[i].setStatusChangeDate("?");
+				} else {
+					String statusChangeDate = (String) patientItem.get("statuschangedate");
+					patients[i].setStatusChangeDate(statusChangeDate);
+				}
 
 			}
 		} catch (Exception e) {

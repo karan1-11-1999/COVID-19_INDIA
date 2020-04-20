@@ -103,7 +103,9 @@ public class Main extends Application {
 		
 		
         Scene mainScene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-		// Add the stuff and set the primary stage
+        // adds a stylesheet to change color of graph
+        mainScene.getStylesheets().add("application/lcStyle.css");
+        // Add the stuff and set the primary stage
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(mainScene);
         primaryStage.show();
@@ -215,6 +217,10 @@ public class Main extends Application {
 					record.put(dateAnnounced, new Date(dateAnnounced, 1, 0)); // first patient of that date and hasn't
 				// recovered
 			}
+
+
+			
+			
 		}
 		
 		//3. create a sorted ArrayList to store all the Dates that have showed up, remove "?"
@@ -225,7 +231,8 @@ public class Main extends Application {
 		}
 		Collections.sort(dates);
 		
-		//build the desired 2D array
+		//build the desired 2D array 
+		//KARAN PATEL UPDATES (using indi)
 		Object[][] countryGraph = new Object[3][dates.size()];
 		for(int i=0; i<dates.size(); i++) {
 			countryGraph[0][i] = dates.get(i).date;
@@ -233,14 +240,17 @@ public class Main extends Application {
 			countryGraph[2][i] = dates.get(i).recovered;
 		}
 		
-		//A test for checking the matrix
-//		for(int i=0; i<dates.size(); i++) {
-//			System.out.println(countryGraph[0][i] );
-//			System.out.println(countryGraph[1][i] );
-//			System.out.println(countryGraph[2][i] );
-//		}
-		
-		
+		/*
+		 * 
+		 * 
+		 * PLEASE NOT THAT THE ONLINE JSON
+		 * FILE WE PARSED HAD WRONG INFO
+		 * ABOUT RECOVERED DATA
+		 * HOWEVER WE STILL USED THAT.
+		 * 
+		 * 
+		 * 
+		 */
 		
 		
 		ObservableList<String> ob = FXCollections.observableArrayList();
@@ -256,28 +266,26 @@ public class Main extends Application {
 		lc.setTitle("India Cases");
 		
 		
-		XYChart.Series<String, Number> data = new XYChart.Series<String, Number>();
+		XYChart.Series<String, Number> dataConfirmed = new XYChart.Series<String, Number>();
+		XYChart.Series<String, Number> dataRecovered = new XYChart.Series<String, Number>();
+
 		
-		//data.getData().add(new XYChart.Data<String,Number>("DATE STRING WITH TRUNCATE",CASES));
-		//DUMMY DATA!!!
-		data.getData().add(new XYChart.Data<String,Number>("12/4",207));
-		data.getData().add(new XYChart.Data<String,Number>("13/4",342));
-		data.getData().add(new XYChart.Data<String,Number>("14/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("15/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("16/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("17/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("18/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("19/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("20/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("21/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("22/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("23/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("24/4",750));
-		data.getData().add(new XYChart.Data<String,Number>("25/4",750));
+		for(int i=0; i<countryGraph[0].length; i++) {
+		
+			dataConfirmed.getData().add(new XYChart.Data<String,Number>((String)countryGraph[0][i],(int)countryGraph[1][i]));
+			dataRecovered.getData().add(new XYChart.Data<String,Number>((String)countryGraph[0][i],(int)countryGraph[2][i]));
+
+		
+		}
+		
 				
-		data.setName("Confirmed");
+		dataConfirmed.setName("Confirmed");
+		dataRecovered.setName("Recovered");
+
 		
-		lc.getData().add(data);
+		lc.getData().add(dataConfirmed);
+		lc.getData().add(dataRecovered);
+
 		return lc;
 		
 		

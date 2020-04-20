@@ -19,7 +19,15 @@ class Patient {
 	private long patientNumber;			// 8904 , -1 means not filled
 	private String stateCode; 			//"KL" , "?" means not filled , State codes to names on https://kb.bullseyelocations.com/support/solutions/articles/5000695302-india-state-codes
 	private String typeoftransmission; 	//"Imported" , "?" means not filled
+	private String statusChangeDate; 	//"Imported" , "?" means not filled
+
 	
+	public String getStatusChangeDate() {
+		return statusChangeDate;
+	}
+	public void setStatusChangeDate(String statusChangeDate) {
+		this.statusChangeDate = statusChangeDate;
+	}
 	public int getAge() {
 		return age;
 	}
