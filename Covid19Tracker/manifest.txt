@@ -1,0 +1,4 @@
+Manifest-Version: 4.0
+Created-By: A team 71
+Class-Path: application/json-simple-1.1.1.jar
+Main-Class: application.Main

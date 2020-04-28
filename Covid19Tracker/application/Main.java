@@ -55,6 +55,7 @@ public class Main extends Application {
 		countryButton.setGraphic(cbImgView);
 		//on clicking the button
 		
+		
 		HBox stateHB = new HBox();
 		Button stateButton = new Button();
 		stateHB.getChildren().add(stateButton);
@@ -64,6 +65,7 @@ public class Main extends Application {
 		sbImgView.setFitWidth(300);
 		sbImgView.setFitHeight(100);
 		stateButton.setGraphic(sbImgView);
+		
 		
 		HBox ageHB = new HBox();
 		Button ageButton = new Button();
@@ -94,10 +96,11 @@ public class Main extends Application {
    		rightImgView.setFitHeight(500);
 		root.setRight(rightImgView);
 		
-		
+		//root.setLeft();
 
 		//center
-		root.setCenter(drawCountryGraph());
+		LineChart countrylc = drawCountryGraph();
+		root.setCenter(countrylc);
 		
 		
 		
@@ -111,6 +114,22 @@ public class Main extends Application {
         primaryStage.show();
         	
         
+        //country
+        countryButton.setOnAction(e->{
+            root.setCenter(drawCountryGraph());
+        });
+        
+        //state
+        VBox example = new VBox();
+        stateButton.setOnAction(e -> {
+            root.setCenter(example);
+        });
+        
+        //age
+        VBox example2 = new VBox();
+        ageButton.setOnAction(e -> {
+            root.setCenter(example2);
+        });
 	}
 
 	private LineChart drawCountryGraph() {
@@ -185,7 +204,7 @@ public class Main extends Application {
 
 		//2. create a map to store all the Dates that have occurred and update the map as
 		// vetting through Patients
-		Map<String, Date> record = new HashMap<String, Date>();
+		HashMap<String, Date> record = new HashMap<String, Date>(); //Using HashMap databasew
 
 		JsonParser jp = new JsonParser();
 		jp.liveURLToJSONToPatientObj();
@@ -235,23 +254,26 @@ public class Main extends Application {
 		//KARAN PATEL UPDATES (using indi)
 		Object[][] countryGraph = new Object[3][dates.size()];
 		for(int i=0; i<dates.size(); i++) {
-			countryGraph[0][i] = dates.get(i).date;
-			countryGraph[1][i] = dates.get(i).Cases;
-			countryGraph[2][i] = dates.get(i).recovered;
+			countryGraph[0][i] = dates.get(i).date.substring(0, dates.get(i).date.length() - 5);; // Date minus the year
+			countryGraph[1][i] = dates.get(i).Cases; // Cases TOtal
+			countryGraph[2][i] = dates.get(i).recovered; // Recovered
 		}
+	
 		
-		/*
-		 * 
-		 * 
-		 * PLEASE NOT THAT THE ONLINE JSON
-		 * FILE WE PARSED HAD WRONG INFO
-		 * ABOUT RECOVERED DATA
-		 * HOWEVER WE STILL USED THAT.
-		 * 
-		 * 
-		 * 
-		 */
+		//To make the cases and recovered cumulative 
 		
+		/*int sumCases = 0;
+		int sumRecovered = 0;
+
+		for(int i=0; i<dates.size(); i++) {	
+			sumCases = (int)countryGraph[1][i] + sumCases;
+			countryGraph[1][i] = sumCases;
+			sumRecovered = (int)countryGraph[2][i] + sumRecovered;
+			countryGraph[2][i] = sumRecovered;
+		}*/
+		
+		
+	
 		
 		ObservableList<String> ob = FXCollections.observableArrayList();
 		//https://www.youtube.com/watch?v=LyeQxISSqJs
@@ -274,6 +296,7 @@ public class Main extends Application {
 		
 			dataConfirmed.getData().add(new XYChart.Data<String,Number>((String)countryGraph[0][i],(int)countryGraph[1][i]));
 			dataRecovered.getData().add(new XYChart.Data<String,Number>((String)countryGraph[0][i],(int)countryGraph[2][i]));
+
 
 		
 		}

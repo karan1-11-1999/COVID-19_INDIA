@@ -24,13 +24,13 @@ class JsonParser {
 
 
 	public void liveURLToJSONToPatientObj() {
-
+		
 		try {
 			InputStream in = new URL("https://api.covid19india.org/raw_data.json").openStream();
 			Files.copy(in, Paths.get("jsoncovid19.json"), StandardCopyOption.REPLACE_EXISTING);
 			parseJSONFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Use live internet please or "+e);
 		}
 
 	}
@@ -38,7 +38,7 @@ class JsonParser {
 	private void parseJSONFile() {
 
 		try {
-			Object obj = new JSONParser().parse(new FileReader("jsoncovid19.json"));
+			Object obj = new JSONParser().parse(new FileReader("jsoncovid19.json")); //Input file
 			JSONObject jo = (JSONObject) obj;
 			JSONArray rawData = (JSONArray) jo.get("raw_data");
 
